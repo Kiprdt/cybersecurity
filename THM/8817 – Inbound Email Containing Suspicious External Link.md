@@ -14,14 +14,19 @@ This alert was triggered by an inbound email contains one or more external links
 ### Content
 Hi C.Allen,\n\nWe detected an unusual sign-in attempt on your Microsoft account.\n\nLocation: Lagos, Nigeria\n\nIP Address: 102.89.222.143\n\nDate: 2025-01-24 06:42\n\nIf this was not you, please secure your account immediately to avoid unauthorized access.\n\n<a href=”https://m1crosoftsupport.co/login”>Review Activity</a>\n\nThank you,\n\nMicrosoft Account Security Team
 
-## 2. Investigation Summary
-SIEM logs show that at 19:01:14, the host 10.20.2.25 opened the link m1crosoftsupport.co. The firewall allowed the connection. Because it is a phishing site, the user's credentials are likely compromised.
+## Investigation
+My investigation confirms that this is a phishing attack using typosquatting because there is a clear spelling error in the domain name (using "1" instead of "i"). After I identified the link as malicious, I searched the SIEM logs and found a record showing that the firewall allowed the user's traffic to this domain. This means the user successfully reached the fake website, and their password was likely stolen and leaked to the attacker.
 
-## 3. Verdict & Disposition
+### Attack Indicators (IOCs)
+* **Phishing URL:** `https://m1crosoftsupport.co/login`
+* **Malicious Domain:** `m1crosoftsupport.co`
+* **Attacker IP:** `45.148.10.131`
+
+## Verdict & Disposition
 * **Verdict:** True Positive (TP)
 * **Status:** Escalated for Incident Response
 
-## 4. Remediation Plan
+## Remediation Plan
 * **Isolate Host:** Remove `10.20.2.25` from the network to prevent lateral movement.
 * **Account Remediation:** Immediate password reset and session revocation for `c.allen`.
 * **Network Blocking:** Blacklist `m1crosoftsupport.co` and IP `45.148.10.13` on the corporate proxy/firewall.
